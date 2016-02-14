@@ -202,7 +202,7 @@
  *    limitations under the License.
  */
 
-package net.dubboclub.reloud.cluster.client;
+package net.dubboclub.reloud.client;
 
 import net.dubboclub.reloud.cluster.ReloudCluster;
 import net.dubboclub.reloud.cluster.ReloudShared;

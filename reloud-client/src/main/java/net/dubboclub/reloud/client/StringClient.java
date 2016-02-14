@@ -202,7 +202,7 @@
  *    limitations under the License.
  */
 
-package net.dubboclub.reloud.cluster.client;
+package net.dubboclub.reloud.client;
 
 /**
  * @date: 2016/2/14.
@@ -211,25 +211,132 @@ package net.dubboclub.reloud.cluster.client;
  * @package:net.dubboclub.reloud.cluster.client.
  * @version:1.0.0
  * @fix:
- * @description: 描述功能
+ * @description: 简单的监支队客户端接口
  */
-public abstract class BitSetClient {
+public abstract class StringClient {
 
-    public Boolean setbit(byte[] key, long offset, boolean value) {
+    /**
+     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
+     * GB).
+     * @param key
+     * @param value
+     * @return
+     */
+    public String set(String key,String value){
+
         return null;
     }
 
-    public Boolean setbit(byte[] key, long offset, byte[] value) {
+    /**
+     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
+     * GB).
+     *
+     * @param key
+     * @param value
+     * @param nxxx  NX|XX, NX -- Only set the key if it does not already exist. XX -- Only set the key
+     *              if it already exist.
+     * @return
+     */
+    public String set(String key, String value, String nxxx) {
         return null;
     }
 
-    public Boolean setbit(String key, long offset, boolean value) {
+    /**
+     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
+     * GB).{@link #set(byte[], byte[], byte[], byte[], int)}
+     *
+     * @param key
+     * @param value
+     * @param nxxx
+     * @param expx
+     * @param time
+     * @return
+     */
+    public String set(String key, String value, String nxxx, String expx,
+               final int time) {
         return null;
     }
 
-    public Boolean setbit(String key, long offset, String value) {
+    /**
+     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
+     * GB).
+     * <p/>
+     * Time complexity: O(1)
+     *
+     * @param key
+     * @param value
+     * @return Status code reply
+     */
+    public String set(byte[] key, byte[] value) {
         return null;
     }
 
 
+    /**
+     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
+     * GB).
+     *
+     * @param key
+     * @param value
+     * @param nxxx  NX|XX, NX -- Only set the key if it does not already exist. XX -- Only set the key
+     *              if it already exist.
+     * @param expx  EX|PX, expire time units: EX = seconds; PX = milliseconds
+     * @param time  expire time in the units of {@param #expx}
+     * @return Status code reply
+     */
+    public String set(byte[] key, byte[] value, byte[] nxxx, byte[] expx, long time) {
+        return null;
+    }
+
+    /**
+     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
+     * GB).
+     *
+     * @param key
+     * @param value
+     * @param nxxx  NX|XX, NX -- Only set the key if it does not already exist. XX -- Only set the key
+     *              if it already exist.
+     * @return
+     */
+    public String set(byte[] key, byte[] value, byte[] nxxx) {
+        return null;
+    }
+
+    /**
+     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
+     * GB).
+     *
+     * @param key
+     * @param value
+     * @param nxxx  NX|XX, NX -- Only set the key if it does not already exist. XX -- Only set the key
+     *              if it already exist.
+     * @param expx  EX|PX, expire time units: EX = seconds; PX = milliseconds
+     * @param time  expire time in the units of {@param #expx}
+     * @return Status code reply
+     */
+    public String set(byte[] key, byte[] value, byte[] nxxx, byte[] expx,
+               int time) {
+        return null;
+    }
+
+    /**
+     * get value from redis by key
+     *
+     * @param key
+     * @return
+     */
+    public byte[] get(final byte[] key) {
+        return new byte[0];
+    }
+
+
+    /**
+     * {@link #get(byte[])}
+     *
+     * @param key
+     * @return
+     */
+    public String get(final String key) {
+        return null;
+    }
 }
