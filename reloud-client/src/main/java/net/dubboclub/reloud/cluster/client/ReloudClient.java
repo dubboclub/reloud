@@ -202,25 +202,165 @@
  *    limitations under the License.
  */
 
-package net.dubboclub.reloud.strategy;
+package net.dubboclub.reloud.cluster.client;
 
+import net.dubboclub.reloud.cluster.ReloudCluster;
 import net.dubboclub.reloud.cluster.ReloudShared;
-
-import java.util.Collection;
-import java.util.List;
+import redis.clients.jedis.JedisPool;
 
 /**
- * @date: 2016/1/22.
+ * @date: 2016/2/14.
  * @author:bieber.
  * @project:reloud.
- * @package:net.dubboclub.reloud.strategy.
+ * @package:net.dubboclub.reloud.cluster.client.
  * @version:1.0.0
  * @fix:
- * @description: åˆ†ç‰‡ç­–ç•¥
+ * @description: ÃèÊö¹¦ÄÜ
  */
-public interface SharedStrategy {
+public abstract class ReloudClient {
 
-    public int shared(String key, Collection<ReloudShared> sharedList);
+    private ReloudCluster reloudCluster;
 
-    public int shared(byte[] bytes,Collection<ReloudShared> sharedList);
+    public ReloudClient(ReloudCluster reloudCluster) {
+        this.reloudCluster = reloudCluster;
+    }
+
+    /**
+     * @param key
+     * @param seconds
+     * @return
+     * @see redis.clients.jedis.Jedis#expire(String, int)
+     */
+    public Long expire(String key, int seconds) {
+        JedisPool jedisPool =  getWritableJedis(key);
+        return null;
+    }
+
+    /**
+     * @param key
+     * @param seconds
+     * @return
+     * @see redis.clients.jedis.Jedis#expire(byte[], int)
+     */
+    public Long expire(byte[] key, int seconds) {
+        return null;
+    }
+
+    /**
+     * @param key
+     * @param unixTime
+     * @return
+     * @see redis.clients.jedis.Jedis#expireAt(String, long)
+     */
+    public Long expireAt(String key, long unixTime) {
+        return null;
+    }
+
+    /**
+     * @param key
+     * @param unixTime
+     * @return
+     * @see redis.clients.jedis.Jedis#expireAt(byte[], long)
+     */
+    public Long expireAt(byte[] key, long unixTime) {
+        return null;
+    }
+
+    /**
+     * @param key
+     * @param milliseconds
+     * @return
+     * @see redis.clients.jedis.Jedis#pexpire(String, long)
+     */
+    public Long pexpire(String key, int milliseconds) {
+        return null;
+    }
+
+    /**
+     * @param key
+     * @param millisecondsTimestamp
+     * @return
+     * @see redis.clients.jedis.Jedis#pexpireAt(String, long)
+     */
+    public Long pexpireAt(String key, long millisecondsTimestamp) {
+        return null;
+    }
+
+    /**
+     * @param key
+     * @param milliseconds
+     * @return
+     * @see redis.clients.jedis.Jedis#pexpire(byte[], long)
+     */
+    public Long pexpire(byte[] key, long milliseconds) {
+        return null;
+    }
+
+    /**
+     * @param key
+     * @param millisecondsTimestamp
+     * @return
+     * @see redis.clients.jedis.Jedis#pexpireAt(byte[], long)
+     */
+    public Long pexpireAt(byte[] key, long millisecondsTimestamp) {
+        return null;
+    }
+
+    /**
+     * @param key
+     * @return
+     * @see redis.clients.jedis.Jedis#ttl(String)
+     */
+    public Long ttl(String key) {
+        return null;
+    }
+
+    /**
+     * @param key
+     * @return
+     * @see redis.clients.jedis.Jedis#ttl(byte[])
+     */
+    public Long ttl(byte[] key) {
+        return null;
+    }
+
+    /**
+     * @param key
+     * @return
+     * @see redis.clients.jedis.Jedis#pttl(String)
+     */
+    public Long pttl(String key) {
+        return null;
+    }
+
+    /**
+     * @param key
+     * @return
+     * @see redis.clients.jedis.Jedis#pttl(byte[])
+     */
+    public Long pttl(byte[] key) {
+        return null;
+    }
+
+
+    protected JedisPool  getWritableJedis(String key){
+        ReloudShared shared = reloudCluster.getShared(key);
+        return shared.getMaster();
+    }
+
+    protected JedisPool getWritableJedis(byte[] key){
+        ReloudShared shared = reloudCluster.getShared(key);
+        return shared.getMaster();
+    }
+
+    protected JedisPool getReadableJedis(String key){
+        ReloudShared shared = reloudCluster.getShared(key);
+        return shared.getReadResource();
+    }
+
+    protected JedisPool getReadableJedis(byte[] key){
+        ReloudShared shared = reloudCluster.getShared(key);
+        return shared.getReadResource();
+    }
+
 }

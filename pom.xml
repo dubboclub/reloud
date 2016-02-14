@@ -18,6 +18,7 @@
         <zkclient_version>0.1</zkclient_version>
         <spring.version>3.2.3.RELEASE</spring.version>
         <common.lang.version>2.6</common.lang.version>
+        <junit.version>4.11</junit.version>
     </properties>
 
     <dependencies>
@@ -67,7 +68,12 @@
             <artifactId>commons-lang</artifactId>
             <version>${common.lang.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

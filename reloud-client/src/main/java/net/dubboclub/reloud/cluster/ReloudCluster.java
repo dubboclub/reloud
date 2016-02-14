@@ -207,8 +207,10 @@ package net.dubboclub.reloud.cluster;
 import net.dubboclub.reloud.Constants;
 import net.dubboclub.reloud.cluster.synchronizer.RefreshingHandler;
 import net.dubboclub.reloud.cluster.synchronizer.Synchronizer;
+import net.dubboclub.reloud.cluster.synchronizer.UsingHandler;
 import net.dubboclub.reloud.notify.RegistryClient;
 import net.dubboclub.reloud.notify.ReloudNotify;
+import net.dubboclub.reloud.strategy.SharedStrategy;
 import net.dubboclub.reloud.util.HashAlgorithm;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -239,10 +241,13 @@ public class ReloudCluster extends Synchronizer implements ReloudNotify{
 
     private JedisPoolConfig jedisPoolConfig;
 
-    public ReloudCluster(String clusterName,String zkConnects,JedisPoolConfig jedisPoolConfig) {
+    private SharedStrategy sharedStrategy;
+
+    public ReloudCluster(String clusterName,String zkConnects,JedisPoolConfig jedisPoolConfig,SharedStrategy sharedStrategy) {
         this.clusterName = clusterName;
         this.zkConnects = zkConnects;
         this.jedisPoolConfig = jedisPoolConfig;
+        this.sharedStrategy = sharedStrategy;
         init();
     }
 
@@ -303,6 +308,30 @@ public class ReloudCluster extends Synchronizer implements ReloudNotify{
             keys.append(children.get(i)).append(Constants.SPLIT_FLAG);
         }
         return  HashAlgorithm.KETAMA_HASH.hash(keys.toString());
+    }
+
+    public ReloudShared  getShared(final String key){
+        if(!isAvailable()){
+            throw new IllegalStateException("Redis cluster ["+clusterName+"] is not available.");
+        }
+        return using(new UsingHandler<ReloudShared>() {
+            public ReloudShared using() {
+                int index = sharedStrategy.shared(key,sharedMap.values());
+                return sharedMap.values().toArray(new ReloudShared[0])[index];
+            }
+        });
+    }
+
+    public ReloudShared  getShared(final byte[] key){
+        if(!isAvailable()){
+            throw new IllegalStateException("Redis cluster ["+clusterName+"] is not available.");
+        }
+        return using(new UsingHandler<ReloudShared>() {
+            public ReloudShared using() {
+                int index = sharedStrategy.shared(key,sharedMap.values());
+                return sharedMap.values().toArray(new ReloudShared[0])[index];
+            }
+        });
     }
 
     public boolean isAvailable(){

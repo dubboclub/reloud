@@ -202,25 +202,35 @@
  *    limitations under the License.
  */
 
-package net.dubboclub.reloud.strategy;
+package net.dubboclub.reloud;
 
-import net.dubboclub.reloud.cluster.ReloudShared;
-
-import java.util.Collection;
-import java.util.List;
+import net.dubboclub.reloud.util.ByteUtils;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
- * @date: 2016/1/22.
+ * @date: 2016/2/14.
  * @author:bieber.
  * @project:reloud.
- * @package:net.dubboclub.reloud.strategy.
+ * @package:net.dubboclub.reloud.
  * @version:1.0.0
  * @fix:
- * @description: åˆ†ç‰‡ç­–ç•¥
+ * @description: ÃèÊö¹¦ÄÜ
  */
-public interface SharedStrategy {
+public class BitSetTest extends RedisTest {
 
-    public int shared(String key, Collection<ReloudShared> sharedList);
+    private String key="bitSet";
 
-    public int shared(byte[] bytes,Collection<ReloudShared> sharedList);
+    @Test
+    public void setBitMap(){
+        boolean setbit =jedis.setbit(key,7, true);
+        System.out.println(setbit);
+        Assert.assertTrue(setbit);
+
+    }
+    @Test
+    public void getBitSet(){
+        byte[] ret =  jedis.getrange(key.getBytes(), 0,5*8);
+        System.out.println(ByteUtils.bytes2int(ret));
+    }
 }

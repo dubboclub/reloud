@@ -202,25 +202,34 @@
  *    limitations under the License.
  */
 
-package net.dubboclub.reloud.strategy;
-
-import net.dubboclub.reloud.cluster.ReloudShared;
-
-import java.util.Collection;
-import java.util.List;
+package net.dubboclub.reloud.cluster.client;
 
 /**
- * @date: 2016/1/22.
+ * @date: 2016/2/14.
  * @author:bieber.
  * @project:reloud.
- * @package:net.dubboclub.reloud.strategy.
+ * @package:net.dubboclub.reloud.cluster.client.
  * @version:1.0.0
  * @fix:
- * @description: åˆ†ç‰‡ç­–ç•¥
+ * @description: ÃèÊö¹¦ÄÜ
  */
-public interface SharedStrategy {
+public abstract class BitSetClient {
 
-    public int shared(String key, Collection<ReloudShared> sharedList);
+    public Boolean setbit(byte[] key, long offset, boolean value) {
+        return null;
+    }
 
-    public int shared(byte[] bytes,Collection<ReloudShared> sharedList);
+    public Boolean setbit(byte[] key, long offset, byte[] value) {
+        return null;
+    }
+
+    public Boolean setbit(String key, long offset, boolean value) {
+        return null;
+    }
+
+    public Boolean setbit(String key, long offset, String value) {
+        return null;
+    }
+
+
 }

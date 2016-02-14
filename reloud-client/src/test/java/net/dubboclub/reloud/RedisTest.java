@@ -202,25 +202,36 @@
  *    limitations under the License.
  */
 
-package net.dubboclub.reloud.strategy;
+package net.dubboclub.reloud;
 
-import net.dubboclub.reloud.cluster.ReloudShared;
-
-import java.util.Collection;
-import java.util.List;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import redis.clients.jedis.Jedis;
 
 /**
- * @date: 2016/1/22.
+ * @date: 2016/2/14.
  * @author:bieber.
  * @project:reloud.
- * @package:net.dubboclub.reloud.strategy.
+ * @package:net.dubboclub.reloud.
  * @version:1.0.0
  * @fix:
- * @description: åˆ†ç‰‡ç­–ç•¥
+ * @description: ÃèÊö¹¦ÄÜ
  */
-public interface SharedStrategy {
+public abstract class RedisTest {
 
-    public int shared(String key, Collection<ReloudShared> sharedList);
+    protected Jedis jedis;
 
-    public int shared(byte[] bytes,Collection<ReloudShared> sharedList);
+
+    @Before
+    public void before(){
+        jedis = new Jedis("localhost",6379);
+    }
+
+
+    @After
+    public void after(){
+        jedis.close();
+    }
+
 }

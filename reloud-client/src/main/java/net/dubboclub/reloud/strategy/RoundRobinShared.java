@@ -207,6 +207,7 @@ package net.dubboclub.reloud.strategy;
 import net.dubboclub.reloud.cluster.ReloudShared;
 import net.dubboclub.reloud.util.HashAlgorithm;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -220,11 +221,11 @@ import java.util.List;
  */
 public class RoundRobinShared implements SharedStrategy {
 
-    public int shared(String key,List<ReloudShared> sharedList) {
+    public int shared(String key,Collection<ReloudShared> sharedList) {
         return (int) (HashAlgorithm.KETAMA_HASH.hash(key)%sharedList.size());
     }
 
-    public int shared(byte[] bytes,List<ReloudShared> sharedList) {
+    public int shared(byte[] bytes,Collection<ReloudShared> sharedList) {
         return (int) (HashAlgorithm.KETAMA_HASH.hash(bytes)%sharedList.size());
     }
 }

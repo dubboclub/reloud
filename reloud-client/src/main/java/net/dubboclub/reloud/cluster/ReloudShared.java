@@ -327,37 +327,41 @@ public class ReloudShared extends Synchronizer implements ReloudNotify{
         return null;
     }
 
-
-    public boolean set(byte[] key,byte[] value){
-        return using(new UsingHandler<Boolean>() {
-
-            public Boolean using() {
-                return false;
-            }
-        });
-    }
-
     /**
      * 返回读实体进行读操作
      * 该方法返回的可能是当前分片的主节点或者从节点，所以不能通过该方法返回的实体进行写操作
      * @return
      */
-    private JedisPool getReadResource(){
-        long index = counter.getAndIncrement();
-        if(slaves.size()>2){
-            return slaves.get((int) (index%slaves.size()));
-        }else{
-            index = (index%(slaves.size()+1));
-            if(index==0){
-                return master;
-            }else{
-                return slaves.get((int) (index-1));
-            }
+    public JedisPool getReadResource(){
+        if(!isAvailable()){
+            throw new IllegalStateException("Redis shared ["+masterAddress+"] is not available.");
         }
+        return using(new UsingHandler<JedisPool>() {
+            public JedisPool using() {
+                long index = counter.getAndIncrement();
+                if(slaves.size()>2){
+                    return slaves.get((int) (index%slaves.size()));
+                }else{
+                    index = (index%(slaves.size()+1));
+                    if(index==0){
+                        return master;
+                    }else{
+                        return slaves.get((int) (index-1));
+                    }
+                }
+            }
+        });
     }
 
-    private JedisPool getMaster(){
-        return master;
+    public JedisPool getMaster(){
+        if(!isAvailable()){
+            throw new IllegalStateException("Redis shared ["+masterAddress+"] is not available.");
+        }
+        return using(new UsingHandler<JedisPool>() {
+            public JedisPool using() {
+                return master;
+            }
+        });
     }
 
 
