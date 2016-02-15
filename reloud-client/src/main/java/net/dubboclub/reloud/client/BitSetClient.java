@@ -204,6 +204,10 @@
 
 package net.dubboclub.reloud.client;
 
+import net.dubboclub.reloud.cluster.ReloudCluster;
+import redis.clients.jedis.BitOP;
+import redis.clients.jedis.Jedis;
+
 /**
  * @date: 2016/2/14.
  * @author:bieber.
@@ -211,25 +215,233 @@ package net.dubboclub.reloud.client;
  * @package:net.dubboclub.reloud.cluster.client.
  * @version:1.0.0
  * @fix:
- * @description: ÃèÊö¹¦ÄÜ
+ * @description: æè¿°åŠŸèƒ½
  */
-public abstract class BitSetClient {
+public abstract class BitSetClient extends AbstractClient{
 
-    public Boolean setbit(byte[] key, long offset, boolean value) {
-        return null;
+    public BitSetClient(ReloudCluster reloudCluster) {
+        super(reloudCluster);
     }
 
-    public Boolean setbit(byte[] key, long offset, byte[] value) {
-        return null;
+    /**
+     *
+     * @param key
+     * @param offset
+     * @param value
+     * @return
+     * @see Jedis#setbit(byte[], long, boolean)
+     */
+    public Boolean setbit(final byte[] key, final long offset, final boolean value) {
+        return write(key, new OperateHandler<Boolean>() {
+            public Boolean operate(Jedis jedis) {
+                return jedis.setbit(key,offset,value);
+            }
+        });
     }
 
-    public Boolean setbit(String key, long offset, boolean value) {
-        return null;
+    /**
+     *
+     * @param key
+     * @param offset
+     * @param value
+     * @return
+     * @see Jedis#setbit(byte[], long, byte[])
+     */
+    public Boolean setbit(final byte[] key, final long offset, final byte[] value) {
+        return write(key, new OperateHandler<Boolean>() {
+            public Boolean operate(Jedis jedis) {
+                return jedis.setbit(key,offset,value);
+            }
+        });
     }
 
-    public Boolean setbit(String key, long offset, String value) {
-        return null;
+    /**
+     *
+     * @param key
+     * @param offset
+     * @param value
+     * @return
+     * @see Jedis#setbit(String, long, boolean)
+     */
+    public Boolean setbit(final String key, final long offset, final boolean value) {
+        return write(key, new OperateHandler<Boolean>() {
+            public Boolean operate(Jedis jedis) {
+                return jedis.setbit(key,offset,value);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param key
+     * @param offset
+     * @param value
+     * @return
+     * @see Jedis#setbit(String, long, String)
+     */
+    public Boolean setbit(final String key, final long offset, final String value) {
+        return write(key, new OperateHandler<Boolean>() {
+            public Boolean operate(Jedis jedis) {
+                return jedis.setbit(key,offset,value);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param key
+     * @return
+     * @see  Jedis#bitcount(String)
+     */
+    public Long bitcount(final String key) {
+        return read(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.bitcount(key);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param key
+     * @return
+     * @see Jedis#bitcount(byte[])
+     */
+    public Long bitcount(final byte[] key) {
+        return read(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.bitcount(key);
+            }
+        });
     }
 
 
+    /**
+     *
+     * @param key
+     * @param start
+     * @param end
+     * @return
+     * @see Jedis#bitcount(String, long, long)
+     */
+    public Long bitcount(final String key, final long start, final long end) {
+        return read(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.bitcount(key,start,end);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param key
+     * @param start
+     * @param end
+     * @return
+     * @see Jedis#bitcount(byte[], long, long)
+     */
+    public Long bitcount(final byte[] key, final long start, final long end) {
+
+        return read(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.bitcount(key,start,end);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param key
+     * @param offset
+     * @return
+     * @see Jedis#getbit(String, long)
+     */
+    public Boolean getbit(final String key, final long offset) {
+
+        return read(key, new OperateHandler<Boolean>() {
+            public Boolean operate(Jedis jedis) {
+                return jedis. getbit(key,offset);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param key
+     * @param offset
+     * @return
+     * @see  Jedis#getbit(byte[], long)
+     */
+    public Boolean getbit(final byte[] key, final long offset) {
+
+        return read(key, new OperateHandler<Boolean>() {
+            public Boolean operate(Jedis jedis) {
+                return jedis. getbit(key,offset);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param key
+     * @param startOffset
+     * @param endOffset
+     * @return
+     * @see Jedis#getrange(String, long, long)
+     */
+    public String getrange(final String key, final long startOffset, final long endOffset) {
+        return read(key, new OperateHandler<String>() {
+            public String operate(Jedis jedis) {
+                return jedis.getrange(key, startOffset, endOffset);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param key
+     * @param startOffset
+     * @param endOffset
+     * @return
+     * @see Jedis#getrange(byte[], long, long)
+     */
+    public byte[] getrange(final byte[] key, final long startOffset, final long endOffset) {
+        return read(key, new OperateHandler<byte[]>() {
+            public byte[] operate(Jedis jedis) {
+                return jedis.getrange(key, startOffset, endOffset);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param key
+     * @param offset
+     * @param value
+     * @return
+     * @see Jedis#setrange(String, long, String)
+     */
+    public Long setrange(final String key, final long offset, final String value) {
+        return write(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.setrange(key,offset,value);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param key
+     * @param offset
+     * @param value
+     * @return
+     * @see Jedis#setrange(byte[], long, byte[])
+     */
+    public Long setrange(final byte[] key, final long offset, final byte[] value) {
+        return write(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.setrange(key,offset,value);
+            }
+        });
+    }
 }

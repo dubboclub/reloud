@@ -205,7 +205,9 @@
 package net.dubboclub.reloud.client;
 
 import net.dubboclub.reloud.cluster.ReloudCluster;
+import net.dubboclub.reloud.cluster.ReloudShared;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 /**
  * @date: 2016/2/14.
@@ -214,172 +216,239 @@ import redis.clients.jedis.Jedis;
  * @package:net.dubboclub.reloud.cluster.client.
  * @version:1.0.0
  * @fix:
- * @description: 简单的监支队客户端接口
+ * @description: 描述功能
  */
-public abstract class StringClient  extends AbstractClient{
+public abstract class AbstractClient {
 
-    public StringClient(ReloudCluster reloudCluster) {
-        super(reloudCluster);
+    private ReloudCluster reloudCluster;
+
+    public AbstractClient(ReloudCluster reloudCluster) {
+        this.reloudCluster = reloudCluster;
     }
 
     /**
-     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
-     * GB).
      * @param key
-     * @param value
+     * @param seconds
      * @return
+     * @see redis.clients.jedis.Jedis#expire(String, int)
      */
-    public String set(final String key, final String value){
-
-        return write(key, new OperateHandler<String>() {
-            public String operate(Jedis jedis) {
-                return jedis.set(key,value);
+    public Long expire(final String key, final int seconds) {
+        return write(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.expire(key,seconds);
             }
         });
     }
 
     /**
-     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
-     * GB).
-     *
      * @param key
-     * @param value
-     * @param nxxx  NX|XX, NX -- Only set the key if it does not already exist. XX -- Only set the key
-     *              if it already exist.
+     * @param seconds
      * @return
+     * @see redis.clients.jedis.Jedis#expire(byte[], int)
      */
-    public String set(final String key, final String value, final String nxxx) {
-        return write(key, new OperateHandler<String>() {
-            public String operate(Jedis jedis) {
-                return jedis.set(key,value,nxxx);
+    public Long expire(final byte[] key, final int seconds) {
+        return write(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.expire(key,seconds);
             }
         });
     }
 
     /**
-     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
-     * GB).{@link #set(byte[], byte[], byte[], byte[], int)}
-     *
      * @param key
-     * @param value
-     * @param nxxx
-     * @param expx
-     * @param time
+     * @param unixTime
      * @return
+     * @see redis.clients.jedis.Jedis#expireAt(String, long)
      */
-    public String set(final String key, final String value, final String nxxx, final String expx,
-               final int time) {
-        return write(key, new OperateHandler<String>() {
-            public String operate(Jedis jedis) {
-                return jedis.set(key,value,nxxx,expx,time);
+    public Long expireAt(final String key, final long unixTime) {
+        return write(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.expireAt(key,unixTime);
             }
         });
     }
 
     /**
-     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
-     * GB).
-     * <p/>
-     * Time complexity: O(1)
-     *
      * @param key
-     * @param value
-     * @return Status code reply
-     */
-    public String set(final byte[] key, final byte[] value) {
-        return write(key, new OperateHandler<String>() {
-            public String operate(Jedis jedis) {
-                return jedis.set(key,value);
-            }
-        });
-    }
-
-
-    /**
-     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
-     * GB).
-     *
-     * @param key
-     * @param value
-     * @param nxxx  NX|XX, NX -- Only set the key if it does not already exist. XX -- Only set the key
-     *              if it already exist.
-     * @param expx  EX|PX, expire time units: EX = seconds; PX = milliseconds
-     * @param time  expire time in the units of {@param #expx}
-     * @return Status code reply
-     */
-    public String set(final byte[] key, final byte[] value, final byte[] nxxx, final byte[] expx, final long time) {
-        return write(key, new OperateHandler<String>() {
-            public String operate(Jedis jedis) {
-                return jedis.set(key,value,nxxx,expx,time);
-            }
-        });
-    }
-
-    /**
-     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
-     * GB).
-     *
-     * @param key
-     * @param value
-     * @param nxxx  NX|XX, NX -- Only set the key if it does not already exist. XX -- Only set the key
-     *              if it already exist.
+     * @param unixTime
      * @return
+     * @see redis.clients.jedis.Jedis#expireAt(byte[], long)
      */
-    public String set(final byte[] key, final byte[] value, final byte[] nxxx) {
-        return write(key, new OperateHandler<String>() {
-            public String operate(Jedis jedis) {
-                return jedis.set(key,value,nxxx);
+    public Long expireAt(final byte[] key, final long unixTime) {
+        return write(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.expireAt(key,unixTime);
             }
         });
     }
 
     /**
-     * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
-     * GB).
-     *
      * @param key
-     * @param value
-     * @param nxxx  NX|XX, NX -- Only set the key if it does not already exist. XX -- Only set the key
-     *              if it already exist.
-     * @param expx  EX|PX, expire time units: EX = seconds; PX = milliseconds
-     * @param time  expire time in the units of {@param #expx}
-     * @return Status code reply
+     * @param milliseconds
+     * @return
+     * @see redis.clients.jedis.Jedis#pexpire(String, long)
      */
-    public String set(final byte[] key, final byte[] value, final byte[] nxxx, final byte[] expx,
-               final int time) {
-        return write(key, new OperateHandler<String>() {
-            public String operate(Jedis jedis) {
-                return jedis.set(key,value,nxxx,expx,time);
+    public Long pexpire(final String key, final long milliseconds) {
+        return write(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.pexpire(key,milliseconds);
             }
         });
     }
 
     /**
-     * get value from redis by key
-     *
+     * @param key
+     * @param millisecondsTimestamp
+     * @return
+     * @see redis.clients.jedis.Jedis#pexpireAt(String, long)
+     */
+    public Long pexpireAt(final String key, final long millisecondsTimestamp) {
+        return write(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.pexpireAt(key,millisecondsTimestamp);
+            }
+        });
+    }
+
+    /**
+     * @param key
+     * @param milliseconds
+     * @return
+     * @see redis.clients.jedis.Jedis#pexpire(byte[], long)
+     */
+    public Long pexpire(final byte[] key, final long milliseconds) {
+        return write(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.pexpire(key,milliseconds);
+            }
+        });
+    }
+
+    /**
+     * @param key
+     * @param millisecondsTimestamp
+     * @return
+     * @see redis.clients.jedis.Jedis#pexpireAt(byte[], long)
+     */
+    public Long pexpireAt(final byte[] key, final long millisecondsTimestamp) {
+        return write(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.pexpireAt(key,millisecondsTimestamp);
+            }
+        });
+    }
+
+    /**
      * @param key
      * @return
+     * @see redis.clients.jedis.Jedis#ttl(String)
      */
-    public byte[] get(final byte[] key) {
-        return read(key, new OperateHandler<byte[]>() {
-            public byte[] operate(Jedis jedis) {
-                return jedis.get(key);
+    public Long ttl(final String key) {
+        return read(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.ttl(key);
             }
         });
     }
-
 
     /**
-     * {@link #get(byte[])}
-     *
      * @param key
      * @return
+     * @see redis.clients.jedis.Jedis#ttl(byte[])
      */
-    public String get(final String key) {
-        return read(key, new OperateHandler<String>() {
-            public String operate(Jedis jedis) {
-                return jedis.get(key);
+    public Long ttl(final byte[] key) {
+        return read(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.ttl(key);
             }
         });
     }
+
+    /**
+     * @param key
+     * @return
+     * @see redis.clients.jedis.Jedis#pttl(String)
+     */
+    public Long pttl(final String key) {
+        return read(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.pttl(key);
+            }
+        });
+    }
+
+    /**
+     * @param key
+     * @return
+     * @see redis.clients.jedis.Jedis#pttl(byte[])
+     */
+    public Long pttl(final byte[] key) {
+        return read(key, new OperateHandler<Long>() {
+            public Long operate(Jedis jedis) {
+                return jedis.pttl(key);
+            }
+        });
+    }
+
+
+    protected JedisPool  getWritableJedis(String key){
+        ReloudShared shared = reloudCluster.getShared(key);
+        return shared.getMaster();
+    }
+
+    protected<T extends Object> T read(String key,OperateHandler<T> operateHandler){
+        JedisPool jedisPool =  getReadableJedis(key);
+        Jedis jedis = jedisPool.getResource();
+        try{
+            return operateHandler.operate(jedis);
+        }finally {
+            jedisPool.returnResourceObject(jedis);
+        }
+    }
+
+    protected<T extends Object> T read(byte[] key,OperateHandler<T> operateHandler){
+        JedisPool jedisPool =  getReadableJedis(key);
+        Jedis jedis = jedisPool.getResource();
+        try{
+            return operateHandler.operate(jedis);
+        }finally {
+            jedisPool.returnResourceObject(jedis);
+        }
+    }
+
+    protected<T extends Object> T write(String key,OperateHandler<T> operateHandler){
+        JedisPool jedisPool =  getWritableJedis(key);
+        Jedis jedis = jedisPool.getResource();
+        try{
+            return operateHandler.operate(jedis);
+        }finally {
+            jedisPool.returnResourceObject(jedis);
+        }
+    }
+
+    protected<T extends Object> T write(byte[] key,OperateHandler<T> operateHandler){
+        JedisPool jedisPool =  getWritableJedis(key);
+        Jedis jedis = jedisPool.getResource();
+        try{
+            return operateHandler.operate(jedis);
+        }finally {
+            jedisPool.returnResourceObject(jedis);
+        }
+    }
+
+    protected JedisPool getWritableJedis(byte[] key){
+        ReloudShared shared = reloudCluster.getShared(key);
+        return shared.getMaster();
+    }
+
+    protected JedisPool getReadableJedis(String key){
+        ReloudShared shared = reloudCluster.getShared(key);
+        return shared.getReadResource();
+    }
+
+    protected JedisPool getReadableJedis(byte[] key){
+        ReloudShared shared = reloudCluster.getShared(key);
+        return shared.getReadResource();
+    }
+
 }
