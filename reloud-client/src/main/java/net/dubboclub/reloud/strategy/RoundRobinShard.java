@@ -204,10 +204,10 @@
 
 package net.dubboclub.reloud.strategy;
 
-import net.dubboclub.reloud.cluster.ReloudShared;
+import net.dubboclub.reloud.cluster.ReloudShard;
+import net.dubboclub.reloud.util.HashAlgorithm;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @date: 2016/1/22.
@@ -216,11 +216,15 @@ import java.util.List;
  * @package:net.dubboclub.reloud.strategy.
  * @version:1.0.0
  * @fix:
- * @description: 分片策略
+ * @description: 通过hash取模的方式确定某个key在哪个分片
  */
-public interface SharedStrategy {
+public class RoundRobinShard implements ShardStrategy {
 
-    public int shared(String key, Collection<ReloudShared> sharedList);
+    public int shard(String key, Collection<ReloudShard> sharedList) {
+        return (int) (HashAlgorithm.KETAMA_HASH.hash(key)%sharedList.size());
+    }
 
-    public int shared(byte[] bytes,Collection<ReloudShared> sharedList);
+    public int shard(byte[] bytes, Collection<ReloudShard> sharedList) {
+        return (int) (HashAlgorithm.KETAMA_HASH.hash(bytes)%sharedList.size());
+    }
 }

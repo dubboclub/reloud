@@ -228,7 +228,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 每个分片有主节点和多个从节点
  *主节点能够接受读和写，而从节点只能接受读
  */
-public class ReloudShared extends Synchronizer implements ReloudNotify{
+public class ReloudShard extends Synchronizer implements ReloudNotify{
 
     private JedisPool master;
 
@@ -244,7 +244,7 @@ public class ReloudShared extends Synchronizer implements ReloudNotify{
 
     private long lastChangeHash = 0;
 
-    public ReloudShared(JedisPoolConfig jedisPoolConfig) {
+    public ReloudShard(JedisPoolConfig jedisPoolConfig) {
         this.jedisPoolConfig = jedisPoolConfig;
     }
 
@@ -334,7 +334,7 @@ public class ReloudShared extends Synchronizer implements ReloudNotify{
      */
     public JedisPool getReadResource(){
         if(!isAvailable()){
-            throw new IllegalStateException("Redis shared ["+masterAddress+"] is not available.");
+            throw new IllegalStateException("Redis shard ["+masterAddress+"] is not available.");
         }
         return using(new UsingHandler<JedisPool>() {
             public JedisPool using() {
@@ -355,7 +355,7 @@ public class ReloudShared extends Synchronizer implements ReloudNotify{
 
     public JedisPool getMaster(){
         if(!isAvailable()){
-            throw new IllegalStateException("Redis shared ["+masterAddress+"] is not available.");
+            throw new IllegalStateException("Redis shard ["+masterAddress+"] is not available.");
         }
         return using(new UsingHandler<JedisPool>() {
             public JedisPool using() {

@@ -204,7 +204,8 @@
 
 package net.dubboclub.reloud;
 
-import net.dubboclub.reloud.cluster.ReloudShared;
+import net.dubboclub.reloud.cluster.ReloudCluster;
+import net.dubboclub.reloud.cluster.ReloudShard;
 import net.dubboclub.reloud.util.HashAlgorithm;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -227,8 +228,8 @@ public class Reloud implements InitializingBean{
 
     private int zkSessionTimeout;
 
-    //所有的redis分片
-    private List<ReloudShared> sharedCollection;
+    //所有的redis集群
+    private ReloudCluster reloudCluster;
 
     public void afterPropertiesSet() throws Exception {
 
@@ -239,9 +240,12 @@ public class Reloud implements InitializingBean{
      * @param key
      * @return
      */
-    public ReloudShared getShared(String key){
-        long hash = HashAlgorithm.KETAMA_HASH.hash(key);
-        return sharedCollection.get((int) (hash%sharedCollection.size()));
+    public ReloudShard getShard(String key){
+        return reloudCluster.getShared(key);
+    }
+
+    public ReloudShard getShard(byte[] key){
+        return reloudCluster.getShared(key);
     }
 
     public void setZkConnectionTimeout(int zkConnectionTimeout) {

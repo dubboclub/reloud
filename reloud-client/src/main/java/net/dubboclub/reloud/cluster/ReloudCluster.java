@@ -210,7 +210,7 @@ import net.dubboclub.reloud.cluster.synchronizer.Synchronizer;
 import net.dubboclub.reloud.cluster.synchronizer.UsingHandler;
 import net.dubboclub.reloud.notify.RegistryClient;
 import net.dubboclub.reloud.notify.ReloudNotify;
-import net.dubboclub.reloud.strategy.SharedStrategy;
+import net.dubboclub.reloud.strategy.ShardStrategy;
 import net.dubboclub.reloud.util.HashAlgorithm;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -229,7 +229,7 @@ public class ReloudCluster extends Synchronizer implements ReloudNotify{
 
     private String clusterName;
 
-    private Map<String,ReloudShared> sharedMap = new HashMap<String, ReloudShared>();
+    private Map<String,ReloudShard> sharedMap = new HashMap<String, ReloudShard>();
 
     private RegistryClient registryClient;
 
@@ -241,9 +241,9 @@ public class ReloudCluster extends Synchronizer implements ReloudNotify{
 
     private JedisPoolConfig jedisPoolConfig;
 
-    private SharedStrategy sharedStrategy;
+    private ShardStrategy sharedStrategy;
 
-    public ReloudCluster(String clusterName,String zkConnects,JedisPoolConfig jedisPoolConfig,SharedStrategy sharedStrategy) {
+    public ReloudCluster(String clusterName,String zkConnects,JedisPoolConfig jedisPoolConfig,ShardStrategy sharedStrategy) {
         this.clusterName = clusterName;
         this.zkConnects = zkConnects;
         this.jedisPoolConfig = jedisPoolConfig;
@@ -275,11 +275,11 @@ public class ReloudCluster extends Synchronizer implements ReloudNotify{
 
 
     private void doRefresh(List<String> sharedList){
-        Map<String,ReloudShared> newSharedMap = new HashMap<String, ReloudShared>();
+        Map<String,ReloudShard> newSharedMap = new HashMap<String, ReloudShard>();
         for(String shared:sharedList){
             //新加的分片需要新建，并且订阅对应的zk节点
             if(!sharedMap.containsKey(shared)){
-                ReloudShared reloudShared = new ReloudShared(jedisPoolConfig);
+                ReloudShard reloudShared = new ReloudShard(jedisPoolConfig);
                 registryClient.subscribe(clusterName+"/"+shared,reloudShared);
                 newSharedMap.put(shared,reloudShared);
             }else{
@@ -310,26 +310,26 @@ public class ReloudCluster extends Synchronizer implements ReloudNotify{
         return  HashAlgorithm.KETAMA_HASH.hash(keys.toString());
     }
 
-    public ReloudShared  getShared(final String key){
+    public ReloudShard getShared(final String key){
         if(!isAvailable()){
             throw new IllegalStateException("Redis cluster ["+clusterName+"] is not available.");
         }
-        return using(new UsingHandler<ReloudShared>() {
-            public ReloudShared using() {
-                int index = sharedStrategy.shared(key,sharedMap.values());
-                return sharedMap.values().toArray(new ReloudShared[0])[index];
+        return using(new UsingHandler<ReloudShard>() {
+            public ReloudShard using() {
+                int index = sharedStrategy.shard(key,sharedMap.values());
+                return sharedMap.values().toArray(new ReloudShard[0])[index];
             }
         });
     }
 
-    public ReloudShared  getShared(final byte[] key){
+    public ReloudShard getShared(final byte[] key){
         if(!isAvailable()){
             throw new IllegalStateException("Redis cluster ["+clusterName+"] is not available.");
         }
-        return using(new UsingHandler<ReloudShared>() {
-            public ReloudShared using() {
-                int index = sharedStrategy.shared(key,sharedMap.values());
-                return sharedMap.values().toArray(new ReloudShared[0])[index];
+        return using(new UsingHandler<ReloudShard>() {
+            public ReloudShard using() {
+                int index = sharedStrategy.shard(key,sharedMap.values());
+                return sharedMap.values().toArray(new ReloudShard[0])[index];
             }
         });
     }

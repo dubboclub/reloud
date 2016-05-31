@@ -205,7 +205,7 @@
 package net.dubboclub.reloud.client;
 
 import net.dubboclub.reloud.cluster.ReloudCluster;
-import net.dubboclub.reloud.cluster.ReloudShared;
+import net.dubboclub.reloud.cluster.ReloudShard;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -392,7 +392,7 @@ public abstract class AbstractClient {
 
 
     protected JedisPool  getWritableJedis(String key){
-        ReloudShared shared = reloudCluster.getShared(key);
+        ReloudShard shared = reloudCluster.getShared(key);
         return shared.getMaster();
     }
 
@@ -437,17 +437,17 @@ public abstract class AbstractClient {
     }
 
     protected JedisPool getWritableJedis(byte[] key){
-        ReloudShared shared = reloudCluster.getShared(key);
+        ReloudShard shared = reloudCluster.getShared(key);
         return shared.getMaster();
     }
 
     protected JedisPool getReadableJedis(String key){
-        ReloudShared shared = reloudCluster.getShared(key);
+        ReloudShard shared = reloudCluster.getShared(key);
         return shared.getReadResource();
     }
 
     protected JedisPool getReadableJedis(byte[] key){
-        ReloudShared shared = reloudCluster.getShared(key);
+        ReloudShard shared = reloudCluster.getShared(key);
         return shared.getReadResource();
     }
 
