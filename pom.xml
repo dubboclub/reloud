@@ -16,7 +16,7 @@
     <properties>
         <jedis.version>2.7.2</jedis.version>
         <dubbo.version>2.5.3</dubbo.version>
-        <spring_version>5.3.20</spring_version>
+        <spring_version>6.0.0</spring_version>
         <servlet_version>2.5</servlet_version>
         <lucene_version>5.3.0</lucene_version>
         <findbugs.excludeFilterFile>findbugs-exclude.xml</findbugs.excludeFilterFile>
